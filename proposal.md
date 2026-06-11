@@ -189,17 +189,7 @@ Required platforms are standard for a microbiome-focused biomedical environment:
 
 ---
 
-## 7. Timeline and Milestones
-
-- **Jun 2026 - Dec 2026:** Validate trackable live AKK strain; finalize engraftment assay; run pilot dosing and post-dose persistence study.
-- **Jan 2027 - Sep 2027:** Complete Aim 1 staged discovery screen across diet, rescue, and rhythm-related host states; classify permissive and resistant conditions.
-- **Oct 2027 - Mar 2028:** Deep-profile high-contrast engrafters and non-engrafters; build and lock the predictive niche-state model.
-- **Apr 2028 - Sep 2028:** Run Aim 3 niche-engineering validation based on model-nominated determinants.
-- **Oct 2028 - Dec 2028:** Integrate causal, metabolic, and predictive results; prepare manuscript and translational guidance framework.
-
----
-
-## 8. Selected References
+## 7. Selected References
 
 1. Mount, S., Canfora, E. E., Jocken, J. W., et al. (2026). Pasteurized *Akkermansia muciniphila* MucT for weight loss maintenance in people with overweight and obesity: a controlled randomized trial. *Nature Medicine*. https://doi.org/10.1038/s41591-026-04394-7
 2. Aronne, L. J., et al. (2026). Orforglipron for maintenance of body weight reduction: the double-blind, randomized phase 3b ATTAIN-MAINTAIN trial. *Nature Medicine*. https://doi.org/10.1038/s41591-026-04386-7
