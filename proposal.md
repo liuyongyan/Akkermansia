@@ -1,130 +1,136 @@
-# Doctoral Dissertation Research Proposal
+# Research Proposal
 
-**Project Title:** Rewiring the Circadian Gating of *Akkermansia muciniphila* Live Biotherapeutic Colonization and Metabolic Efficacy by Host Lifestyles: A Mechanistic Closed-Loop Integrating Multi-Omics and Structural Macromolecular Models  
-**Major:** Biostatistics / Computational Genomics and Bioinformatics  
-**Research Direction:** Gut Microenvironment & Translational Medicine, AI for Science (AI4S)  
+**Project Title:** Host Diet and Circadian Rhythm Gate the Engraftment and Metabolic Efficacy of Live *Akkermansia muciniphila*: A Mechanistic and AI-Assisted Framework for Durable, Lifestyle-Optimized Live Biotherapy
+**Major:** Biostatistics / Computational Genomics and Bioinformatics
+**Research Direction:** Gut Microenvironment & Translational Medicine; AI for Science (AI4S)
 
 ---
 
 ## Abstract
 
-Next-generation probiotics (NGPs), particularly *Akkermansia muciniphila* (AKK), have emerged as revolutionary translational entities for mitigating obesity, insulin resistance, and systemic metabolic syndromes. A milestone clinical trial published in *Nature Medicine* (Mount et al., May 2026) demonstrated that supplementing pasteurized AKK (*MucT®*) significantly suppresses weight regain in individuals with obesity post-dietary intervention. However, it simultaneously unveiled a profound inter-individual heterogeneity in clinical outcomes. Currently, the bottleneck obstructing the precise clinical translation of live AKK formulations lies in our lack of causal understanding regarding how highly dynamic host lifestyles (e.g., westernized diets, sleep deprivation, and circadian misalignment) act as upstream master variables to "gatekeep" the colonization kinetics and transcriptional activities of introduced live biotherapeutics.
+Live *Akkermansia muciniphila* (AKK) is a leading next-generation probiotic for obesity and insulin resistance. Its central therapeutic promise over the pasteurized (non-viable) product is **durability**: a live strain that engrafts in the colonic mucus niche could provide a lasting benefit from a short course, rather than requiring indefinite daily supplementation. A 2026 *Nature Medicine* trial (Mount et al.) established clinical efficacy for *pasteurized* AKK in weight-maintenance but, by design, that product does not colonize, and it reported large inter-individual heterogeneity tied to baseline Akkermansia abundance. The decisive open question for *live* biotherapy is therefore not whether AKK can act, but **what determines whether an introduced live strain establishes, persists, and remains metabolically active in a given host.**
 
-This project pioneers an interdisciplinary paradigm combining *in vivo/in vitro* wet-lab validation with data-driven *in silico* AI modeling. First, we will establish a mouse cross-intervention framework to phenotypically map how high-fat, high-sucrose diets and chronic sleep deprivation abrogate the therapeutic efficacy of live AKK. Spatial-temporal colonization kinetics will be tracked using time-resolved absolute qPCR and fluorescence in situ hybridization (FISH) within the colonic niche. Second, metatranscriptomics and single-cell RNA sequencing (scRNA-seq) will be deployed to elucidate how lifestyle-driven disruption of host goblet cells' mucin-2 (MUC2) secretion clock rewires the transcriptional switches of exogenous AKK. Crucially, we will leverage **AlphaFold 3** (an all-atom macromolecular structure foundation model) and **Geneformer** (a cell state transformer model) to predict the binding structural physics between key AKK outer-membrane proteins (e.g., Amuc_1100 orthologs) and host epithelial receptors (e.g., TLR2) under shifting chemical microenvironments. These computational predictions will be validated via hard causal loops utilizing $Tlr2^{-/-}$ and intestinal epithelial-specific $Bmal1^{-/-}$ knock-out mice. Finally, we will train machine learning architectures (XGBoost/MLP) on multidimensional human clinical profiles to construct a high-precision classifier predicting "Responder" phenotypes. This work aims to provide a mechanistic blueprint and personalized lifestyle guidelines for optimizing next-generation live biotherapeutic interventions.
+We test the hypothesis that two modifiable host behaviors — **diet composition and circadian alignment** — gate live-AKK engraftment by controlling its mucus niche. The diet axis is well supported: dietary fiber and polyphenols promote AKK, whereas Western high-fat/low-fiber diets shift the community toward mucus depletion (Desai 2016; Roopchand 2015; Everard 2013). The circadian axis is the novel claim: because goblet-cell mucin secretion is under peripheral-clock control, we propose that circadian misalignment desynchronizes the niche and impairs colonization of freshly introduced live AKK. Across three experimental modules we (1) quantify, in a factorial mouse design with vehicle controls, how diet and circadian misalignment modulate engraftment and metabolic efficacy of a genetically trackable live AKK strain; (2) resolve the spatiotemporal colonization kinetics and the goblet-cell/mucus mechanism using time-resolved strain-specific qPCR, FISH, metatranscriptomics, scRNA-seq, and metabolomics, with AI used appropriately — AlphaFold 3 for AKK–host interface structural hypotheses and a single-cell foundation model for clock-controlled regulators — followed by causal validation in intestinal-epithelial *Bmal1* and *Tlr2* knockouts; and (3) deliver the actionable payoff: whether active-phase time-restricted feeding or circadian-timed dosing **rescues** efficacy in disrupted hosts, plus a parsimonious statistical model that predicts engraftment from baseline host features. Because efficacy is shown to depend on lifestyle, the work also reframes diet and sleep as part of the prescription itself — giving patients a concrete, mechanistic reason to sustain healthy habits.
 
 ---
 
 ## 1. Introduction & Significance
 
-### 1.1 Clinical Landscape and Bottlenecks of Next-Generation Live Biotherepeutics
-Obesity and its associated metabolic co-morbidities represent an escalating global public health crisis. Although GLP-1 receptor agonists (e.g., semaglutide, orforglipron) have revolutionized weight loss therapy, their prohibitive costs, gastrointestinal adverse effects, and inevitable weight rebound upon cessation make long-term weight maintenance an elusive target in metabolic medicine.
+### 1.1 Why live AKK, and why durability is the right target
+GLP-1 receptor agonists (e.g., semaglutide, orforglipron) produce strong weight loss but rebound on cessation and carry cost and gastrointestinal burdens (Aronne et al., *Nat Med* 2026). *A. muciniphila*, a mucosal anaerobe, is inversely associated with adiposity, inflammation, and insulin resistance, and improves these in preclinical and early clinical work. In May 2026, *Nature Medicine* reported that **pasteurized** AKK (MucT) blunted weight regain during a 24-week maintenance phase after diet-induced weight loss (Mount et al.; ITT n ≈ 84), with adipose transcriptional remodeling toward mitochondrial/oxidative pathways.
 
-*Akkermansia muciniphila*, a strict anaerobe mucosal symbiont, has consistently exhibited strong inverse correlations with host adiposity, low-grade inflammation, and insulin resistance. In May 2026, *Nature Medicine* published two concurrent landmark papers. One large-scale double-blind RCT (Mount et al., *Nat Med*, 2026) confirmed that oral administration of pasteurized *Akkermansia muciniphila* MucT over 24 weeks effectively blunts weight regain during an unrestricted ad libitum maintenance phase by transcriptionally reprogramming adipose tissue oxidative pathways. However, this trial also highlighted a pervasive challenge in microbiome therapeutics: extreme **inter-individual variability**. A substantial subset of participants exhibited a "Non-responder" phenotype, gaining weight despite identical dosing. This strongly indicates that introduced live biotherapeutics do not operate in a static vacuum, but are subject to the host's highly dynamic physiological and behavioral matrix.
+Two facts from that trial define our problem. First, the efficacious product was **non-viable and does not colonize** — efficacy came from a sustained pharmacological signal requiring continued dosing. Second, response was **heterogeneous and associated with baseline Akkermansia abundance**. The distinct, higher-value proposition of a *live* biotherapeutic is durability: a strain that establishes in the mucus niche could convert a chronic supplement into a short, self-sustaining course. That proposition stands or falls on a single variable the dead product never had to satisfy — **engraftment** — and engraftment is governed by the host niche. Understanding and controlling that niche is the prerequisite for any durable live-AKK therapy, and it is what this project addresses.
 
-### 1.2 Host Lifestyles and Circadian Gating of the Gut Ecological Niche
-The colonic mucus layer, principally composed of MUC2 glycoproteins secreted by goblet cells, serves as the exclusive ecological niche and carbon source for AKK. Chronobiology has established that the intestinal epithelium is under tight peripheral clock control governed by core clock loops (*Bmal1, Clock, Per1/2*), causing mucin synthesis, immune sampling, and bile acid profiles to oscillate in a strict circadian manner.
+### 1.2 The mucus niche is controlled by diet and by the circadian clock
+The colonic mucus layer (principally MUC2 from goblet cells) is AKK's ecological niche and carbon source. Two host inputs shape it:
 
-In modern society, high-fat, high-sugar diets coupled with sleep deprivation and shift-work disrupt these peripheral tissue clocks, causing them to uncouple from the central suprachiasmatic nucleus (SCN). Recent landmark studies have demonstrated that sleep deprivation leads to severe lysosomal deacidification in goblet cells, collapsing the intestinal mucus barrier (Wang et al., *Cell Host Microbe*, 2023). **However, a fundamental blind spot remains: how do disrupted host lifestyles and the resulting uncoupled tissue microenvironments causally gatekeep the chronological colonization kinetics, functional transcription, and clinical metabolic efficacy of freshly introduced exogenous live AKK?**
+- **Diet (established).** Fiber and polyphenols expand AKK and reinforce the mucus barrier; fiber deprivation drives the microbiota to forage host mucin and thins the barrier; Western high-fat/low-fiber diets reduce AKK (Desai 2016; Roopchand 2015; Everard 2013; Dao 2016). Diet is thus a validated lever on the niche and serves as our anchor axis.
+- **Circadian rhythm (hypothesis).** The intestinal epithelium is under peripheral-clock control (*Bmal1, Clock, Per*), and mucus thickness, immune sampling, and bile-acid profiles oscillate diurnally (Gutierrez Lopez et al., *Cell Metab* 2021). Shift work, late eating, and circadian misalignment uncouple peripheral clocks from the central pacemaker. We hypothesize that this desynchronizes the secretory niche and impairs colonization of newly introduced live AKK.
 
-### 1.3 The Necessity of AI for Science (AI4S) in Microbiome Mechanics
-Traditional microbiome research relies heavily on descriptive 16S rRNA sequencing. When faced with multi-omics datasets spanning temporal host behavior, bacterial metatranscriptomics, metabolomics, and host scRNA-seq, classical linear correlation frameworks inevitably lose non-linear regulatory features. With the advent of multi-chain macromolecular models (AlphaFold 3) and transformer-based cell foundation models (Geneformer, scGPT), researchers can now simulate all-atom interactions and predict complex cell network perturbations *in silico*. Integrating AI-driven inference with wet-lab validation has become the gold standard for high-impact biological discovery.
+A tension we address directly: AKK itself can *repair* sleep-deprivation-induced goblet-cell/mucus damage (Wang et al., *Cell Host Microbe* 2023). Whether chronic misalignment nonetheless prevents an introduced strain from establishing in the first place — engraftment versus repair — is precisely the unresolved, non-trivial question, and the contrast motivates the design below.
+
+### 1.3 Appropriate use of AI4S
+Multi-omics spanning host behavior, bacterial metatranscriptomics, metabolomics, and host scRNA-seq exceeds linear-correlation methods. We use AI where it is genuinely informative and within its validated capability: **AlphaFold 3** to generate structural hypotheses for AKK outer-membrane-protein/host-receptor complexes (using model confidence, e.g., ipTM/pTM, with binding energetics estimated by downstream MD/MM-GBSA — *not* by AlphaFold itself), and a **single-cell foundation model (Geneformer)** for in silico perturbation of goblet-cell regulatory networks. All computational predictions are treated as hypotheses and tested with genetic knockouts.
 
 ---
 
-## 2. Research Objectives & Central Questions
+## 2. Objectives & Central Questions
 
-### 2.1 Research Objectives
-This project aims to bridge the gap between traditional wet-lab assays and computational biology by establishing a "Lifestyle control $\rightarrow$ Multi-omics alignment $\rightarrow$ Foundation model inference $\rightarrow$ Gnotobiotic closed-loop" framework. We seek to systematically map the causal cascade of how host diet and sleep habits orchestrate the survival and transcription of supplemented live AKK, and build a machine learning model to predict therapeutic responders, establishing a paradigm for precision microbiome translation.
+**Objective.** Establish the causal chain *host diet/circadian state → mucus niche → live-AKK engraftment and transcription → metabolic efficacy*, and convert it into actionable rules (lifestyle and dosing) for durable live-AKK therapy.
 
-### 2.2 Central Scientific Questions
-1.  **Phenotypic Layer:** Through what macro-physiological axes do distinct dietary structures combined with sleep deprivation/circadian misalignment abrogate the anti-obesity and insulin-sensitizing efficacy of live AKK?
-2.  **Colonization Layer:** How does lifestyle-induced clock uncoupling in host goblet cells alter the temporal colonization kinetics and biogeographical localization of introduced live AKK?
-3.  **Molecular Mechanism Layer:** How do shifting chemical and immunological microenvironments prompt a "transcriptional rewiring" in live AKK? What structural physical perturbations occur at the interface of key AKK outer-membrane proteins and host receptors (e.g., TLR2)?
-4.  **Translational Layer:** Can host multi-dimensional lifestyle profiles and baseline metrics alone predict live biotherapeutic efficacy in human cohorts using non-linear machine learning classifiers?
+**Central questions.**
+1. **Phenotype.** Do Western diet and circadian misalignment, separately and jointly, reduce the engraftment and the anti-obesity/insulin-sensitizing efficacy of a single course of live AKK?
+2. **Niche & kinetics.** How do diet and clock disruption alter the spatiotemporal colonization kinetics and biogeography of introduced live AKK, and is this mediated by the goblet-cell/MUC2 secretory rhythm?
+3. **Mechanism.** What transcriptional and metabolic state does the host niche impose on engrafted AKK, and which host receptor/clock axes (e.g., TLR2; epithelial *Bmal1*) are causally required?
+4. **Rescue & prediction.** Can active-phase time-restricted feeding or circadian-timed dosing rescue efficacy in disrupted hosts, and can baseline host features predict engraftment?
 
 ---
 
 ## 3. Research Content & Experimental Design
 
-The project is structured into four highly integrated modules (Modules 1–4) designed to build an ironclad causal chain.
+A single mechanistic spine runs through three modules. The in vivo phenotype is mapped broadly; expensive deep-omics and causal-genetic work are focused on the most informative arms.
 
-### 3.1 Module 1: Mapping the Phenotypic Blockade of AKK Efficacy by Host Lifestyles (*In Vivo*)
-This module establishes controlled animal models to quantify the extent to which diet and sleep disruption interfere with live AKK therapeutics.
+### 3.1 Module 1 — Does host lifestyle gate live-AKK engraftment and efficacy? (*in vivo*)
 
-* **Animal Models & Cross-Intervention:** 8-week-old C57BL/6J male mice will be subjected to a 2-factor (diet $\times$ circadian rhythm) cross-experimental layout for 12 weeks:
-    * **Group 1 (Chow-Ctrl):** Standard chow diet + normal light-dark (12h:12h) cycle + vehicle (PBS).
-    * **Group 2 (HFD-Vehicle):** 60% high-fat diet + normal LD cycle + vehicle.
-    * **Group 3 (HFD-Healthy-AKK):** 60% high-fat diet + normal LD cycle + daily oral gavage of live *A. muciniphila* ($10^9$ CFU).
-    * **Group 4 (HFD-DietShift-AKK):** Erratic/cafeteria diet (frequent shifts in fat/sugar ratios and feeding windows) + normal LD cycle + daily live AKK.
-    * **Group 5 (HFD-SleepDep-AKK):** 60% high-fat diet + chronic sleep deprivation (using an automated sleep deprivation enclosure that provides gentle mechanical disruption during the daytime sleeping phase) + daily live AKK.
-* **Metabolic Phenotyping:**
-    * **Body Composition:** Longitudinal lean/fat mass tracking every two weeks via live EchoMRI.
-    * **Glycemic Homeostasis:** Oral Glucose Tolerance Tests (OGTT) and Insulin Tolerance Tests (ITT) performed at weeks 8 and 12 to calculate the Area Under the Curve (AUC) and HOMA-IR indices.
-    * **Systemic Inflammation:** Serum levels of endotoxin (LPS), TNF-$\alpha$, IL-6, and fasting active GLP-1 quantified via high-sensitivity ELISA.
+**Trackable strain.** To distinguish introduced from endogenous AKK, we use a marked live strain — a spontaneous rifampicin-resistant derivative of AKK MucT verified to retain growth and Amuc_1100 expression — enabling selective culture **and** strain-specific qPCR. Mice receive a short antibiotic pre-treatment to open the niche prior to a defined-course gavage (anaerobically prepared, viability QC by CFU at each dose).
 
-### 3.2 Module 2: Temporal Colonization Kinetics and Spatial Biogeography of Live AKK
-This module tracks the spatial-temporal journey of introduced live bacteria inside hostile or uncoupled host intestinal niches.
+**Factorial design.** A 2 × 2 × 2 design in C57BL/6J mice, **both sexes**, for 12 weeks:
+- **Diet:** control (low-fat, high-fiber) vs Western (high-fat, low-fiber).
+- **Circadian:** normal 12h:12h light–dark vs chronic misalignment (weekly 8-h phase advances — an automated, low-labor "chronic jet-lag" paradigm that avoids the stress confounds of mechanical sleep deprivation; mistimed light-phase feeding used as an orthogonal misalignment driver in a confirmatory subset).
+- **Treatment:** vehicle (PBS) vs a defined course of live AKK.
 
-* **Temporal Clearance Dynamics:** Following a standardized single dose of live AKK at specific treatment phases, fecal samples will be collected at hyper-resolved time intervals (1h, 3h, 6h, 12h, 24h, 1w, 2w, 4w). Total metagenomic DNA will be extracted, and absolute quantification qPCR utilizing AKK-specific 16S rRNA primers will be performed to construct clearance kinetic models across the different lifestyle groups.
-* **Spatial Niche Biogeography (FISH-IF):** Distal colon segments will be harvested using Carnoy's fixative to preserve the mucus architecture. Paraffin sections will undergo dual **Fluorescence In Situ Hybridization and Immunofluorescence (FISH-IF)** using a Cy3-conjugated AKK-specific 16S probe (5'-GGCTTGCTTGCTCGTGTG-3') combined with an FITC-labeled anti-MUC2 antibody. Using high-resolution confocal microscopy, we will map the absolute spatial distance of AKK cells relative to the epithelial border to determine whether sleep deprivation causes AKK to directly contact epithelial cells due to a depleted mucus layer, shifting its role from symbiotic to inflammatory.
+Vehicle arms within every diet × circadian cell are essential: they separate "lifestyle worsens metabolism" from "lifestyle blocks AKK specifically." **Sample size** is set a priori by power analysis (target: detect a 30% reduction in the AKK efficacy effect on fat mass, two-sided α = 0.05, power = 0.8; ~10–12 mice/sex/group), pre-registered with predefined exclusion criteria and blinded phenotyping.
 
-### 3.3 Module 3: Multi-Omics Integration and Macromolecular Structural Modeling (*In Silico* & *In Vivo*)
-This core module dissects the molecular mechanisms and structural biophysics using an AI4S pipeline.
+**Phenotyping.** Body composition (EchoMRI, biweekly); glucose homeostasis (OGTT/ITT with AUC, HOMA-IR at weeks 8 and 12); systemic inflammation and incretin tone (serum LPS, TNF-α, IL-6, fasting active GLP-1).
 
-* **Metatranscriptomics & Network Alignment:** Luminal content RNA will be extracted, depleted of host/ribosomal RNA, and subjected to deep sequencing. Focusing on the AKK transcriptome, we will employ a partial least squares regression framework (**mixOmics-PLS**) to align host lifestyle parameters and untargeted LC-MS/MS cecal metabolomics with AKK transcriptional pathways. We aim to discover whether sleep-deprived microenvironments force AKK to overexpress mucin-degrading glycoside hydrolases (over-eating the host barrier due to starvation) or suppress protective structural elements like the Amuc_1100 protein.
-* **AlphaFold 3 Interactome Simulation:** The amino acid sequences of AKK outer-membrane components highlighted by metatranscriptomics will be entered into **AlphaFold 3**. We will simulate the all-atom structural docking of these bacterial proteins against host pattern recognition receptors (TLR2, TLR4) and endocrine L-cell receptors. This simulation will incorporate local chemical ligands (e.g., specific secondary bile acids discovered via metabolomics) to calculate binding free energies ($\Delta G$) and run in silico mutational scanning to identify critical binding pockets.
-* **Geneformer Cell State Inference:** Single-cell RNA sequencing (scRNA-seq) will be performed on isolated colonic mucosal cells. The digital expression profiles will be used to fine-tune **Geneformer** (a 200M-parameter foundational single-cell transformer model). This model will simulate how host goblet cells' gene regulatory networks (GRNs) collapse under localized clock disruption, identifying upstream transcription factors that stall MUC2 O-glycosylation.
-* **Causal Validation via Knock-out Models:**
-    * **Receptor Genetic Causal Loop:** Global **`Tlr2` knock-out mice ($Tlr2^{-/-}$)** will be utilized. If a healthy lifestyle combined with live AKK fails to rescue HFD-induced insulin resistance in $Tlr2^{-/-}$ mice, it will confirm the computational model's receptor axis.
-    * **Peripheral Clock Causal Loop:** Intestinal epithelial-specific **`Bmal1` knock-out mice ($Bmal1^{\Delta IEC}$)** will be generated via the *Vilin-Cre* system. These mice lack an independent gut epithelial clock. We will test whether $Bmal1^{\Delta IEC}$ mice under normal sleep conditions display the same live AKK non-responsiveness seen in sleep-deprived wild-type mice, establishing the peripheral tissue clock as the primary upstream gatekeeper.
+### 3.2 Module 2 — Colonization kinetics, biogeography, and the niche mechanism
 
-### 3.4 Module 4: Human Gnotobiotic Validation and Machine Learning Response Classifiers
-This translational module bridges mouse mechanics with human clinical applications, addressing the problem of clinical heterogeneity.
+- **Temporal kinetics.** After a standardized dose, feces are sampled at 1, 3, 6, 12, 24 h and 1, 2, 4 weeks; strain-specific absolute qPCR (plus selective CFU) yields clearance/persistence curves fit with mixed-effects nonlinear models across lifestyle arms. Dosing is performed at fixed circadian times to keep timing controlled (and varied deliberately in Module 3's chrono-dosing test).
+- **Spatial biogeography (FISH-IF).** Distal colon fixed in Carnoy's to preserve mucus; dual FISH (validated AKK-specific probe, e.g., MUC-1437; sequence and specificity controls reported) with anti-MUC2 immunofluorescence and confocal imaging to quantify AKK-to-epithelium distance and mucus thickness — testing whether disruption forces AKK into epithelial contact (symbiont→irritant shift).
+- **Niche rhythm.** MUC2 secretion and goblet-cell markers are sampled across the 24-h cycle to test whether loss of the secretory rhythm, not mean mucus level alone, predicts engraftment failure.
 
-* **Humanized Gnotobiotic Mice (FMT):** Human volunteers will be stratified based on physiological telemetry from wearable devices (Oura Ring 4, Dexcom Stelo CGM):
-    * **Cohort A (Healthy Lifestyles):** Highly consistent sleep architecture, high-polyphenol/high-fiber diets.
-    * **Cohort B (Circadian Disrupted):** Chronic night-shift or late-sleep schedules, westernized high-fat convenience diets.
-    * Fecal samples from Cohorts A and B will be transplanted into **Germ-Free (GF) mice**. Following humanization, both mouse cohorts will be fed identical HFD regimens and receive identical live AKK supplementation. This will test whether lifestyle-molded human donor microbiomes retain their gatekeeping effects across species lines.
-* **Machine Learning Responder Predictor:** We will construct a clinical feature matrix $\mathbf{X}$ encompassing patient metrics (age, baseline AKK abundance, average sleep duration, sleep timing variability, dietary polyphenol scores). The target vector $Y$ will be binary metabolic responsiveness (Responder = 1, Non-responder = 0, defined by weight-loss maintenance efficacy).
-    * We will train an optimized **XGBoost** classifier and a **Multilayer Perceptron (MLP)** network.
-    * Using 5-fold cross-validation to minimize overfitting, we will evaluate performance using Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics to deliver an actionable, lifestyle-informed precision prescription software tool for next-generation live biotherapeutics.
+### 3.3 Module 3 — Mechanism: multi-omics, AI hypotheses, and causal validation (*in silico* + *in vivo*)
+
+Deep-omics are run on the four highest-contrast arms (control/normal, Western/normal, control/misaligned, Western/misaligned; ± AKK).
+
+- **Metatranscriptomics + metabolomics.** Luminal RNA (host/rRNA-depleted) profiles the *engrafted AKK transcriptome*; untargeted LC-MS/MS gives cecal metabolites (notably secondary bile acids). Multi-omics integration (e.g., mixOmics/DIABLO) tests whether disrupted niches push AKK toward mucin-foraging glycoside hydrolases or away from Amuc_1100.
+- **Host single-cell.** scRNA-seq of colonic mucosa; a single-cell foundation model (Geneformer) performs in silico perturbation to nominate clock-controlled upstream regulators of the goblet-cell secretory program. We frame the target as transcriptional control of the secretory/MUC2 program — not post-transcriptional O-glycosylation, which is enzyme-level and validated separately.
+- **AlphaFold 3 structural hypotheses.** Candidate AKK outer-membrane proteins (e.g., Amuc_1100, whose TLR2 signaling is established — Plovier 2017) are modeled in complex with host receptors (TLR2/TLR4); complex plausibility is judged by AF3 confidence, and binding energetics/mutational effects are estimated by downstream MD/MM-GBSA and in silico mutagenesis. Outputs are explicit, falsifiable predictions for the validation step.
+- **Causal validation (the closed loop).**
+  - **Epithelial clock:** intestinal-epithelium-specific *Bmal1* knockout (*Bmal1*^fl/fl × *Villin-Cre*; lines available from Jackson, crossed in-house). Test: do *Bmal1*^ΔIEC mice under normal light–dark recapitulate the engraftment/efficacy failure seen in misaligned wild-types — establishing the epithelial clock as the upstream gate?
+  - **Receptor axis:** *Tlr2*^−/− mice. Test: is TLR2 required for live-AKK metabolic rescue, confirming the predicted interface?
+
+### 3.4 Module 4 — Rescue, chrono-dosing, and predictive modeling (the actionable payoff)
+
+- **Lifestyle rescue.** In Western-diet, misaligned mice receiving live AKK, test whether **active-phase (dark-phase) time-restricted feeding** restores the mucus rhythm, AKK engraftment, and metabolic efficacy — the direct evidence for "lifestyle as part of the prescription."
+- **Chrono-dosing.** Administer the same live-AKK course at different circadian phases to identify an optimal dosing window for engraftment — a cheap, immediately translatable variable.
+- **Predictive model (biostatistics core).** Using the mouse cohort, (i) a formal **causal mediation analysis** quantifies how much of the lifestyle→metabolic-outcome effect is mediated by the MUC2 rhythm and by AKK engraftment; (ii) a parsimonious classifier (elastic-net / gradient boosting with nested cross-validation, calibrated and reported with appropriate small-n caveats) predicts engraftment/response from baseline features (baseline AKK, feeding-rhythm amplitude, fiber intake). This is positioned as hypothesis-generating for future human translation, not as a clinical tool.
 
 ---
 
 ## 4. Expected Outcomes & Innovations
 
-### 4.1 Expected Outcomes
-1.  **High-Impact Publications:** High-quality, comprehensive research articles targeted for *Cell*, *Nature*, or *Science* (or elite sub-journals like *Nature Medicine*, *Cell Host & Microbe*).
-2.  **Theoretical Breakthrough:** Establishing a new paradigm showing that host peripheral circadian clocks act as upstream structural gates regulating the spatial-temporal and transcriptional survival of exogenous live therapeutics.
-3.  **Computational Deliverables:** An open-source AlphaFold 3-derived data repository mapping bacterial-host macromolecular interfaces, alongside a cross-platform machine learning software suite designed to predict probiotic responsiveness in clinical trials.
+### 4.1 Expected outcomes
+1. Quantitative evidence on whether — and how strongly — diet and circadian misalignment gate live-AKK engraftment and efficacy, with vehicle-controlled attribution.
+2. A causal mechanism linking the host epithelial clock and MUC2 secretory rhythm to colonization, validated genetically.
+3. Actionable rules: a tested lifestyle rescue (active-phase TRF) and an optimal circadian dosing window, plus an open dataset of AKK–host interface structural models.
 
-### 4.2 Key Innovations
-* **Conceptual Integration:** Moving beyond static "dead cell" kinetics (such as Mount et al., 2026) or simple descriptive sequencing, this project links **macro-behavioral chronobiology with live bacterial transcriptomics** inside the host.
-* **AI4S Paradigm Close-Loop:** AI foundation models (AlphaFold 3, Geneformer) serve as active engines driving mechanistic discovery. Rather than acting as descriptive tools, they predict precise binding pockets and network anomalies that are then validated using targeted knock-out animal lines.
-* **Translational Pipeline:** Leveraging humanized germ-free models to replicate modern sleep/diet disruptions provides a direct path toward personalized clinical applications and medical software deployment.
-
----
-
-## 5. Feasibility Analysis
-
-1.  **Infrastructure & Platforms:** The laboratory features an advanced germ-free facility capable of executing large-scale humanized FMT trials under sterile conditions. High-resolution confocal, LC-MS/MS platforms, and single-cell libraries are fully operational.
-2.  **Computational Resources:** The department maintains a high-performance GPU cluster (equipped with NVIDIA H100/A100 compute nodes) that natively supports local AlphaFold 3 structural simulations and large-scale transformer fine-tuning pipelines.
-3.  **Technical Expertise:** The investigator possesses advanced proficiency in Python and R, with an established background in handling scRNA-seq processing, metatranscriptomic assemblies, and deep learning network configurations. Preliminary data on cell-to-cell communication networks ensure smooth execution of the multi-omics integration.
+### 4.2 Key innovations
+- **Engraftment as the decisive variable for live biotherapy.** Reframes the field from "does AKK act" (answered for the dead product) to "does a live strain establish," the only path to durable, low-burden therapy.
+- **Circadian gating as a modifiable lever.** Establishes peripheral-clock control of an *introduced* strain's colonization, and shows it can be corrected by feeding timing and dosing timing.
+- **Disciplined AI4S.** AlphaFold 3 and a single-cell foundation model generate falsifiable structural and regulatory hypotheses that are then tested in knockouts — AI as a hypothesis engine, with energetics computed by the correct downstream tools.
+- **Behavioral co-benefit.** Because efficacy depends on lifestyle, the therapy itself motivates and rewards healthy diet and sleep — a clinically meaningful feedback loop.
 
 ---
 
-## 6. Timeline & Selected References
+## 5. Feasibility
 
-### Project Milestones
-* **June 2026 – December 2026:** Finalize Module 1 animal cross-interventions; generate metabolic phenotypes; capture time-resolved qPCR clearance data and complete colonic FISH assays.
-* **January 2027 – August 2027:** Complete metatranscriptomics and single-cell RNA-seq profiling. Launch AlphaFold 3 and Geneformer arrays; complete *in silico* docking simulations and lock in mutational target candidates.
-* **September 2027 – March 2028:** Procure $Tlr2^{-/-}$ and $Bmal1^{\Delta IEC}$ breeding pairs; initiate back-validation wet-lab trials. Finalize human donor enrollment and initialize germ-free mouse humanization runs.
-* **April 2028 – September 2028:** Complete machine learning classifier assembly and evaluate predictive performance. Consolidate figures, draft the final manuscript, and submit to leading journals.
+1. **Scope and team.** The plan is sized for 2–3 PhD students with AI assistance over ~30 months, divided as in vivo/wet-lab, sequencing/omics, and computational/biostatistics. Deep-omics and the two knockout lines are deliberately limited to the most informative arms to keep workload realistic; the human/humanized work present in early drafts has been removed.
+2. **Critical-path timing.** *Bmal1*^fl/fl × *Villin-Cre* breeding (~6–9 months to usable cohorts) and the marked-strain validation are started immediately, in parallel with Module 1, so they do not bottleneck later modules. *Tlr2*^−/− is commercially available.
+3. **Platforms.** Germ-free/gnotobiotic and anaerobic culture facilities, confocal microscopy, LC-MS/MS, and single-cell library prep are operational. A departmental GPU cluster (H100/A100) supports AlphaFold 3 and foundation-model fine-tuning.
+4. **Expertise.** The team has demonstrated proficiency in Python/R, scRNA-seq and metatranscriptomic pipelines, multi-omics integration, and statistical modeling, with preliminary cell–cell communication analyses in hand.
+
+---
+
+## 6. Timeline & References
+
+### Milestones (~30 months)
+- **Jun 2026 – Mar 2027:** Module 1 factorial phenotyping; Module 2 kinetics and FISH. In parallel: validate marked strain; begin *Bmal1*^ΔIEC breeding; acquire *Tlr2*^−/−.
+- **Apr 2027 – Dec 2027:** Module 3 metatranscriptomics, scRNA-seq, metabolomics on focal arms; AlphaFold 3 / Geneformer pipelines; lock validation targets.
+- **Jan 2028 – Jun 2028:** Causal validation in *Bmal1*^ΔIEC and *Tlr2*^−/− mice.
+- **Apr 2028 – Dec 2028:** Module 4 rescue and chrono-dosing experiments; causal-mediation and predictive modeling; manuscript preparation.
 
 ### Selected References
-1. Mount, S., Canfora, E. E., Jocken, J. W., ... & Blaak, E. E. (2026). Pasteurized *Akkermansia muciniphila* MucT for weight loss maintenance in people with overweight and obesity: a controlled randomized trial. *Nature Medicine*, 10.1038/s41591-026-04394-7.
-2. Aronne, L. J., et al. (2026). Orforglipron for maintenance of body weight reduction: the double-blind, randomized phase 3b ATTAIN-MAINTAIN trial. *Nature Medicine*, 10.1038/s41591-026-04386-7.
-3. de Vos, W. M., Tilg, H., Van Hul, M., & Cani, P. D. (2022). Next-generation beneficial microbes: the case of *Akkermansia muciniphila*. *Frontiers in Microbiology*, 13, 1054.
-4. Abramson, J., Adler, J., Dunger, J., ... & Jumper, J. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. *Nature*, 630, 493–500.
-5. Theis, C. V., et al. (2023). Circadian rhythms clock the gut microbiota—host intersection in metabolic health. *Cell Host & Microbe*, 31(7), 1105-1118.
-6. Wang, Z., et al. (2023). *Akkermansia muciniphila* ameliorates lysosomal deacidification in goblet cells to maintain the intestinal mucus barrier in sleep-deprived mice. *Cell Host & Microbe*, 31(11), 1821-1835. [https://doi.org/10.1016/j.chom.2023.10.005](https://doi.org/10.1016/j.chom.2023.10.005)
+1. Mount, S., Canfora, E. E., Jocken, J. W., … Blaak, E. E. (2026). Pasteurized *Akkermansia muciniphila* MucT for weight loss maintenance in people with overweight and obesity: a controlled randomized trial. *Nature Medicine*. https://doi.org/10.1038/s41591-026-04394-7
+2. Aronne, L. J., et al. (2026). Orforglipron for maintenance of body weight reduction: the ATTAIN-MAINTAIN phase 3b trial. *Nature Medicine*. https://doi.org/10.1038/s41591-026-04386-7
+3. Cani, P. D., & de Vos, W. M. (2017). Next-generation beneficial microbes: the case of *Akkermansia muciniphila*. *Frontiers in Microbiology*, 8, 1765.
+4. Plovier, H., et al. (2017). A purified membrane protein from *Akkermansia muciniphila* or the pasteurized bacterium improves metabolism in obese and diabetic mice. *Nature Medicine*, 23(1), 107–113.
+5. Everard, A., et al. (2013). Cross-talk between *Akkermansia muciniphila* and intestinal epithelium controls diet-induced obesity. *PNAS*, 110(22), 9066–9071.
+6. Roopchand, D. E., et al. (2015). Dietary polyphenols promote growth of the gut bacterium *Akkermansia muciniphila* and attenuate high-fat diet-induced metabolic syndrome. *Diabetes*, 64(8), 2847–2858.
+7. Desai, M. S., et al. (2016). A dietary fiber-deprived gut microbiota degrades the colonic mucus barrier and enhances pathogen susceptibility. *Cell*, 167(5), 1339–1353.
+8. Dao, M. C., et al. (2016). *Akkermansia muciniphila* and improved metabolic health during a dietary intervention in obesity. *Gut*, 65(3), 426–436.
+9. Gutierrez Lopez, D. E., Lashinger, L. M., Weinstock, G. M., & Bray, M. S. (2021). Circadian rhythms and the gut microbiome synchronize the host's metabolic response to diet. *Cell Metabolism*, 33(5), 873–895.
+10. Wang, Z., et al. (2023). *Akkermansia muciniphila* ameliorates lysosomal deacidification in goblet cells to maintain the intestinal mucus barrier in sleep-deprived mice. *Cell Host & Microbe*, 31(11), 1821–1835. https://doi.org/10.1016/j.chom.2023.10.005
+11. Abramson, J., Adler, J., Dunger, J., … Jumper, J. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. *Nature*, 630, 493–500.
+</content>
+</invoke>
